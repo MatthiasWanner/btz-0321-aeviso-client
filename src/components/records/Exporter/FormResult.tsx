@@ -7,6 +7,7 @@ import OneUser from './OneUser';
 import Spinner from '../../Spinner';
 import TotalHours from './TotalHours';
 import ResultHeader from './ResultHeader';
+import UsersList from './UsersList';
 
 function FormResult(): JSX.Element {
   const [start, setStart] = useState<Date>(new Date());
@@ -72,24 +73,7 @@ function FormResult(): JSX.Element {
           endDate={end}
           startDate={start}
         />
-        <div className="mb-20">
-          {users.map((user) => {
-            return (
-              <div className="dark:text-white text-black mx-4 sm:mx-6 flex " key={user.id}>
-                <OneUser
-                  firstName={user.firstName}
-                  lastName={user.lastName}
-                  projectId={projectId}
-                  userId={user.id}
-                  weeklyBasis={user.weeklyBasis}
-                  job={user.jobId}
-                  start={start}
-                  end={end}
-                />
-              </div>
-            );
-          })}
-        </div>
+        <UsersList users={users} projectId={projectId} start={start} end={end} />
       </div>
       <div className="shadow-inputShadow sm:sticky bottom-0 ">
         <TotalHours />
