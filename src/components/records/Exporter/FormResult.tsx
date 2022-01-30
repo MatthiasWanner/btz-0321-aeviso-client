@@ -1,68 +1,54 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { AxiosError } from 'axios';
 import { companies, project } from '../../../API/requests';
 import OneUser from './OneUser';
 import Spinner from '../../Spinner';
 import TotalHours from './TotalHours';
-import cloud from '../../../../media/icons/cloud.svg';
-import { exportToCsv } from '../../../assets/exportToCsv';
-import { useStats } from '../../../store/stats.slice';
+import ResultHeader from './ResultHeader';
 
 function FormResult(): JSX.Element {
-  const [company, setCompany] = useState<Company>({} as Company);
-  const [start, setStart] = useState<Date | null>(null);
-  const [end, setEnd] = useState<Date | null>(null);
-  const [prjt, setPrjt] = useState<Project>({} as Project);
-  const [users, setUsers] = useState<IResultUser[]>([]);
+  const [start, setStart] = useState<Date>(new Date());
+  const [end, setEnd] = useState<Date>(new Date());
 
-  const { users: usersStats } = useStats();
-
+  const { projectId, companyId } = useParams<{ companyId: string; projectId: string }>();
   const { search } = useLocation();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(search);
+    const startQuery = searchParams.get('start');
+    const endQuery = searchParams.get('end');
 
-    if (searchParams.get('start') && searchParams.get('end')) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      setStart(new Date(searchParams.get('start')!));
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      setEnd(new Date(searchParams.get('end')!));
+    if (startQuery && endQuery) {
+      setStart(new Date(startQuery));
+      setEnd(new Date(endQuery));
     }
   }, [search]);
 
-  const { companyId, projectId } = useParams<{ companyId: string; projectId: string }>();
+  const {
+    data: projectDatas,
+    isLoading: projectLoading,
+    error: projectError,
+  } = useQuery<Project, AxiosError>(['project', projectId], () => project.getOne(projectId), {
+    enabled: !!projectId,
+  });
 
-  const { isLoading: companyLoading, error: companyError } = useQuery<Company, AxiosError>(
-    ['company', companyId],
-    () => companies.getOne(companyId),
-    {
-      onSuccess: (data) => {
-        setCompany(data);
-      },
-    }
-  );
+  const {
+    data: companyDatas,
+    isLoading: companyLoading,
+    error: companyError,
+  } = useQuery<Company, AxiosError>(['company', companyId], () => companies.getOne(companyId), {
+    enabled: !!companyId,
+  });
 
-  const { isLoading: projectLoading, error: projectError } = useQuery<Project, AxiosError>(
-    ['project', projectId],
-    () => project.getOne(projectId),
-    {
-      onSuccess: (data) => {
-        setPrjt(data);
-      },
-    }
-  );
-
-  const { isLoading: recordLoading, error: recordError } = useQuery<IResultUser[], AxiosError>(
-    'users',
-    () => project.getUsers(projectId),
-    {
-      onSuccess: (data) => {
-        setUsers(data);
-      },
-    }
-  );
+  const {
+    data: users = [],
+    isLoading: recordLoading,
+    error: recordError,
+  } = useQuery<IResultUser[], AxiosError>('users', () => project.getUsers(projectId), {
+    enabled: !!projectId,
+  });
   const error = companyError || projectError || recordError;
 
   if (companyLoading || projectLoading || recordLoading) {
@@ -80,39 +66,12 @@ function FormResult(): JSX.Element {
   return (
     <div className="flex flex-col justify-between dark:bg-component bg-white border dark:border-componentBorder h-full sm:w-full text-black dark:text-white font-roboto rounded-md shadow-buttonShadow dark:shadow-mainShadow mx-4 sm:mx-0 overflow-y-auto">
       <div>
-        <div className="bg-white dark:bg-component shadow-buttonShadow  sm:sticky top-0">
-          <div className="flex justify-between items-start mx-4 py-3">
-            <div>
-              <h1 className="font-bold sm:text-xl mr-5">Entreprise : {company?.name}</h1>
-              <h1 className="font-bold mt-2 sm:text-xl mr-5">Projet : {prjt?.name} </h1>
-            </div>
-            <Link to="/rapport/exporter">
-              <button className="focus:outline-none sm:w-full rounded-md sm:mt-8 h-9 text-white shadow-buttonShadow px-4 py-1 mr-3 sm:mr-0 bg-customGreen">
-                Retour
-              </button>
-            </Link>
-          </div>
-          <div className="flex flex-col sm:flex-row mt-5 pb-5 sm:pb-0 w-full justify-between">
-            <h1 className="text-base sm:text-lg mx-4 sm:mx-6 sm:mb-8">
-              Rapport du {start && start.toLocaleDateString()} au {end && end.toLocaleDateString()}
-            </h1>
-            <a
-              href={exportToCsv({
-                company: company?.name,
-                project: prjt?.name,
-                start: start?.toLocaleDateString() as string,
-                end: end?.toLocaleDateString() as string,
-                records: usersStats,
-              })}
-              download={`${company?.name}_${
-                prjt?.name
-              }_${start?.toLocaleDateString()}_${end?.toLocaleDateString()}.csv`}
-              className="flex text-sm h-8 sm:text-base text-white items-center bg-customBlue px-4 py-1 shadow-buttonShadow rounded-md mx-3 mt-2 sm:mt-0 sm:mx-6 w-max"
-            >
-              Télécharger le rapport <img className="ml-2" src={cloud} alt="cloud" />
-            </a>
-          </div>
-        </div>
+        <ResultHeader
+          companyName={companyDatas?.name || ''}
+          projectName={projectDatas?.name || ''}
+          endDate={end}
+          startDate={start}
+        />
         <div className="mb-20">
           {users.map((user) => {
             return (
