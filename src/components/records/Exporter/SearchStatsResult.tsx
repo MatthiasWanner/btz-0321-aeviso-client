@@ -8,7 +8,7 @@ import ProjectStats from './ProjectStats';
 import ResultHeader from './ResultHeader';
 import UsersList from './UsersList';
 
-function FormResult(): JSX.Element {
+function SearchStatsResult(): JSX.Element {
   const [start, setStart] = useState<Date>(new Date());
   const [end, setEnd] = useState<Date>(new Date());
 
@@ -64,7 +64,13 @@ function FormResult(): JSX.Element {
   }
 
   return (
-    <div className="flex flex-col justify-between dark:bg-component bg-white border dark:border-componentBorder h-full sm:w-full text-black dark:text-white font-roboto rounded-md shadow-buttonShadow dark:shadow-mainShadow mx-4 sm:mx-0 overflow-y-auto">
+    <div
+      className="
+          flex flex-col justify-between dark:bg-component bg-white border 
+          dark:border-componentBorder h-full sm:w-full text-black 
+          dark:text-white font-roboto rounded-md shadow-buttonShadow 
+          dark:shadow-mainShadow mx-4 sm:mx-0 overflow-y-auto"
+    >
       <div>
         <ResultHeader
           companyName={companyDatas?.name || ''}
@@ -81,4 +87,4 @@ function FormResult(): JSX.Element {
   );
 }
 
-export default FormResult;
+export default SearchStatsResult;

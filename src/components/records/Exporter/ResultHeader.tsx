@@ -20,18 +20,21 @@ function ResultHeader({ companyName, projectName, startDate, endDate }: IProps):
       <div className="flex justify-between items-start mx-4 py-3">
         <div>
           <h1 className="font-bold sm:text-xl mr-5">Entreprise : {companyName}</h1>
-          <h1 className="font-bold mt-2 sm:text-xl mr-5">Projet : {projectName} </h1>
+          <h2 className="font-bold mt-2 sm:text-xl mr-5">Projet : {projectName} </h2>
         </div>
         <Link to="/rapport/exporter">
-          <button className="focus:outline-none sm:w-full rounded-md sm:mt-8 h-9 text-white shadow-buttonShadow px-4 py-1 mr-3 sm:mr-0 bg-customGreen">
+          <button
+            className="
+              focus:outline-none sm:w-full rounded-md sm:mt-8 h-9 text-white shadow-buttonShadow px-4 py-1 mr-3 sm:mr-0 bg-customGreen"
+          >
             Retour
           </button>
         </Link>
       </div>
       <div className="flex flex-col sm:flex-row mt-5 pb-5 sm:pb-0 w-full justify-between">
-        <h2 className="text-base sm:text-lg mx-4 sm:mx-6 sm:mb-8">
+        <h3 className="text-base sm:text-lg mx-4 sm:mx-6 sm:mb-8">
           Rapport du {startDate.toLocaleDateString()} au {endDate.toLocaleDateString()}
-        </h2>
+        </h3>
         <a
           href={exportToCsv({
             company: companyName,
