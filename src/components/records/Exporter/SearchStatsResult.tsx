@@ -3,9 +3,8 @@ import { useLocation, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { AxiosError } from 'axios';
 import { companies, project } from '../../../API/requests';
-import OneUser from './OneUser';
 import Spinner from '../../Spinner';
-import TotalHours from './TotalHours';
+import ProjectStats from './ProjectStats';
 import ResultHeader from './ResultHeader';
 import UsersList from './UsersList';
 
@@ -76,7 +75,7 @@ function FormResult(): JSX.Element {
         <UsersList users={users} projectId={projectId} start={start} end={end} />
       </div>
       <div className="shadow-inputShadow sm:sticky bottom-0 ">
-        <TotalHours />
+        <ProjectStats />
       </div>
     </div>
   );

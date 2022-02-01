@@ -29,9 +29,9 @@ function ResultHeader({ companyName, projectName, startDate, endDate }: IProps):
         </Link>
       </div>
       <div className="flex flex-col sm:flex-row mt-5 pb-5 sm:pb-0 w-full justify-between">
-        <h1 className="text-base sm:text-lg mx-4 sm:mx-6 sm:mb-8">
+        <h2 className="text-base sm:text-lg mx-4 sm:mx-6 sm:mb-8">
           Rapport du {startDate.toLocaleDateString()} au {endDate.toLocaleDateString()}
-        </h1>
+        </h2>
         <a
           href={exportToCsv({
             company: companyName,

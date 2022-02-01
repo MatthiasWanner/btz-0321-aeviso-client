@@ -6,7 +6,7 @@ import ProjectList from './project/ProjectList';
 import HomePage from '../views/HomePage';
 import Logout from '../components/navigation/Logout';
 import ListsCompanies from './companies/ListsCompanies';
-import FormResult from './records/Exporter/FormResult';
+import SearchStatsResult from './records/Exporter/SearchStatsResult';
 import Admin from './home/Admin';
 import ExportRecords from './records/Exporter/ExportRecords';
 import DetailsProjects from './companies/DetailsProjects';
@@ -36,7 +36,7 @@ function Routes(): JSX.Element {
         <Route exact path="/modifier/projets/:id" component={CreateUpdateProjects} />
         <Route exact path="/collaborateurs" component={Collaborators} />
         <Route path="/collaborateurs/:id" component={User} />
-        <Route exact path="/exporter/:companyId/projets/:projectId" component={FormResult} />
+        <Route exact path="/exporter/:companyId/projets/:projectId" component={SearchStatsResult} />
         <Route exact path="/reglages" component={Settings} />
         <Route path="/deconnexion" component={Logout} />
       </>
@@ -67,7 +67,7 @@ function Routes(): JSX.Element {
         <Route exact path="/" component={ListsCompanies} />
         <Route exact path="/client/nouveau" component={CreateUpdateCompany} />
         <Route exact path="/nouveau/projet/:companyId" component={CreateUpdateProjects} />
-        <Route exact path="/exporter/:companyId/projets/:projectId" component={FormResult} />
+        <Route exact path="/exporter/:companyId/projets/:projectId" component={SearchStatsResult} />
         <Route exact path="/rapport/exporter" component={ExportRecords} />
         <Route exact path="/modifier/projets/:id" component={CreateUpdateProjects} />
         <Route exact path="/clients/:id" component={Company} />
