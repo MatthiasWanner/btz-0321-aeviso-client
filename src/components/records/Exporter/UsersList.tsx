@@ -1,5 +1,5 @@
 import React from 'react';
-import OneUser from './OneUser';
+import OneUserStats from './OneUserStats';
 
 interface IProps {
   users: IResultUser[];
@@ -14,13 +14,13 @@ function UsersList({ users, projectId, start, end }: IProps): JSX.Element {
       {users.map((user) => {
         return (
           <div className="dark:text-white text-black mx-4 sm:mx-6 flex " key={user.id}>
-            <OneUser
+            <OneUserStats
               firstName={user.firstName}
               lastName={user.lastName}
               projectId={projectId}
               userId={user.id}
               weeklyBasis={user.weeklyBasis}
-              job={user.jobId}
+              jobId={user.jobId}
               start={start}
               end={end}
             />
