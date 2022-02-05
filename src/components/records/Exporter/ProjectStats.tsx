@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { calculateTotalHours } from '../../../assets/exportToCsv';
 import { useStats } from '../../../store/stats.slice';
 
-function TotalHours(): JSX.Element {
+function ProjectStats(): JSX.Element {
   const { users, dispatchReset } = useStats();
 
   useEffect(() => {
@@ -18,4 +18,4 @@ function TotalHours(): JSX.Element {
   );
 }
 
-export default TotalHours;
+export default ProjectStats;
