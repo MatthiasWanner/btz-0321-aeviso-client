@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import React, { useState } from 'react';
+import React from 'react';
 import { useQuery } from 'react-query';
 
 import { jobs, project } from '../../../API/requests';
@@ -12,24 +12,33 @@ interface IOneUser {
   lastName: string;
   projectId: string;
   userId: string;
-  job: string;
-  start: Date | null;
-  end: Date | null;
+  jobId: string;
+  start: Date;
+  end: Date;
   weeklyBasis: IResultUser['weeklyBasis'];
 }
 
-function OneUser({ firstName, lastName, projectId, userId, job, start, end, weeklyBasis }: IOneUser): JSX.Element {
-  const [jobName, setJobName] = useState<Job>();
-  const [records, setRecords] = useState<IRecord[]>([]);
-
+function OneUserStats({
+  firstName,
+  lastName,
+  projectId,
+  userId,
+  jobId,
+  start,
+  end,
+  weeklyBasis,
+}: IOneUser): JSX.Element {
   const { dispatchAddUser } = useStats();
 
-  const { isLoading: recordIsLoading, error: recordIsError } = useQuery<IRecord[], AxiosError>(
+  const {
+    data: records = [],
+    isLoading: recordIsLoading,
+    error: recordIsError,
+  } = useQuery<IRecord[], AxiosError>(
     ['records', userId],
-    () => project.getUserRecords(projectId, userId, start?.toISOString() as string, end?.toISOString() as string),
+    () => project.getUserRecords(projectId, userId, start.toISOString(), end.toISOString()),
     {
       onSuccess: (record) => {
-        setRecords(record);
         dispatchAddUser({
           name: `${firstName} ${lastName}`,
           weeklyBasis: transformWeeklyBasisToNumber(weeklyBasis),
@@ -40,17 +49,14 @@ function OneUser({ firstName, lastName, projectId, userId, job, start, end, week
     }
   );
 
+  //TODO: improve that part by using a hook
   const totalHalfDays = records.length;
 
-  const { isLoading: jobIsLoading, error: jobIsError } = useQuery<Job, AxiosError>(
-    ['job', job],
-    () => jobs.getOne(job),
-    {
-      onSuccess: (data) => {
-        setJobName(data);
-      },
-    }
-  );
+  const {
+    data: jobDatas,
+    isLoading: jobIsLoading,
+    error: jobIsError,
+  } = useQuery<Job, AxiosError>(['job', jobId], () => jobs.getOne(jobId));
 
   const error = jobIsError || recordIsError;
 
@@ -72,7 +78,7 @@ function OneUser({ firstName, lastName, projectId, userId, job, start, end, week
         <p className="font-bold text-base">
           {firstName} {lastName}
         </p>
-        <p className="sm:text-sm text-xs sm:ml-3 font-thin">/ {jobName?.label}</p>
+        <p className="sm:text-sm text-xs sm:ml-3 font-thin">/ {jobDatas?.label}</p>
       </div>
 
       {getTotalHours(weeklyBasis, totalHalfDays) === 0 ? (
@@ -83,4 +89,4 @@ function OneUser({ firstName, lastName, projectId, userId, job, start, end, week
     </div>
   );
 }
-export default OneUser;
+export default OneUserStats;
