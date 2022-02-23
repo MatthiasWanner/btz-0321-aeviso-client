@@ -22,7 +22,11 @@ export const statsSlice = createSlice({
   initialState,
   reducers: {
     addUser: (state, action: PayloadAction<UserSelection>) => {
-      state.selectedUsers.push(action.payload);
+      const userIndex = state.selectedUsers.findIndex(
+        (item) => item.name.toLowerCase() === action.payload.name.toLowerCase()
+      );
+      if (userIndex !== -1) state.selectedUsers[userIndex] = action.payload;
+      else state.selectedUsers.push(action.payload);
     },
     reset: () => initialState,
   },
