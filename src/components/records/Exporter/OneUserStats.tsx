@@ -13,8 +13,8 @@ interface IOneUser {
   projectId: string;
   userId: string;
   jobId: string;
-  start: Date;
-  end: Date;
+  start: Date | null;
+  end: Date | null;
   weeklyBasis: IResultUser['weeklyBasis'];
 }
 
@@ -36,8 +36,9 @@ function OneUserStats({
     error: recordIsError,
   } = useQuery<IRecord[], AxiosError>(
     ['records', userId],
-    () => project.getUserRecords(projectId, userId, start.toISOString(), end.toISOString()),
+    () => project.getUserRecords(projectId, userId, start?.toISOString(), end?.toISOString()),
     {
+      enabled: !!end && !!start,
       onSuccess: (record) => {
         dispatchAddUser({
           name: `${firstName} ${lastName}`,

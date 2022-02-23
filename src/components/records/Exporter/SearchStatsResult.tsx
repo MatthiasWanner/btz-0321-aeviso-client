@@ -9,8 +9,8 @@ import ResultHeader from './ResultHeader';
 import UsersList from './UsersList';
 
 function SearchStatsResult(): JSX.Element {
-  const [start, setStart] = useState<Date>(new Date());
-  const [end, setEnd] = useState<Date>(new Date());
+  const [start, setStart] = useState<Date | null>(null);
+  const [end, setEnd] = useState<Date | null>(null);
 
   const { projectId, companyId } = useParams<{ companyId: string; projectId: string }>();
   const { search } = useLocation();

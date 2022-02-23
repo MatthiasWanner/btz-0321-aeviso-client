@@ -4,8 +4,8 @@ import OneUserStats from './OneUserStats';
 interface IProps {
   users: IResultUser[];
   projectId: string;
-  start: Date;
-  end: Date;
+  start: Date | null;
+  end: Date | null;
 }
 
 function UsersList({ users, projectId, start, end }: IProps): JSX.Element {
